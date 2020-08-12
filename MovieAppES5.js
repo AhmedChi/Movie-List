@@ -9,6 +9,7 @@ function Movie(title, director, releaseDate){
 // UI Constructor
 function UI(){}
 
+// Add Data to Table
 UI.prototype.addMovieToList = function(movie){
     const list = document.getElementById('movie-list');
     // Create tr Element
@@ -32,6 +33,26 @@ UI.prototype.clearFields = function(){
     document.getElementById('release-date').value = ''; 
 }
 
+// Show Alert
+UI.prototype.showAlert = function(message, className) {
+    // Create Div
+    const div = document.createElement('div');
+    // Add className
+    div.className = `alert ${className}`;
+    // Add TextNode
+    div.appendChild(document.createTextNode(message));
+    // Get Parent
+    const container = document.querySelector('.container');
+    // Get Form
+    const form = document.querySelector('#movie-form');
+    // Insert Alert
+    container.insertBefore(div, form);
+    // Timeout After 3 sec
+    setTimeout(function(){
+        document.querySelector('.alert').remove();
+    }, 3000)
+
+}
 
 // Event Listeners
 document.getElementById('movie-form').addEventListener('submit', 
@@ -45,11 +66,16 @@ function(e){
     // Instantiate UI
     const ui = new UI();
 
-    // Add Movie to list
-    ui.addMovieToList(movie);
-
-    // Clear fields
-    ui.clearFields();
+    // Validate Fields
+    if(movie.title === '' || movie.director === '' || movie.releaseDate === '' ){
+        ui.showAlert('Please fill in all fields', 'error' );
+    } else {
+        ui.addMovieToList(movie);
+        // Show success
+        ui.showAlert('Book Added', 'success')
+        // Clear fields
+        ui.clearFields();
+    }
 
     e.preventDefault();
 });
